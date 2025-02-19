@@ -40,20 +40,22 @@ void setup(S *S, int nwarm, int nskip, int nmeas)
 	S->nwarm = nwarm;
 	S->nskip = nskip;
 	S->nmeas = nmeas;
-	S->binsize = 100; // !!! BINSIZE FIXED HERE !!!!
+	S->binsize = 1000; // !!! BINSIZE FIXED HERE !!!!
 	S->nbin = nmeas/ S->binsize; //hoe many bins needed
 	
 	// ~ Memory Allocation ~
 	S->bin = (double *)malloc(S->binsize * sizeof(double));
+
 	S->binavgs = (double *)malloc(S->nbin * sizeof(double));
 }
 
 void sweep(S *S)
 {
 	// generate a random sample from a standard normal distribution
-	
-	double u1 = (rand() % 10000) / 10000.0;
+
+	double u1 = (rand() % 10000) / 10000.0; // prevents div by zero. trying to fix issues. Aspen later:  this actually just broke my code lol
 	double u2 = (rand() % 10000) / 10000.0;
+	
 
 	double z0 = sqrt(-2.0 * log(u1)) * cos(2.0 * M_PI * u2);
 
@@ -123,8 +125,8 @@ void output(S *S)
 		fprintf(file, "%d\t%f\n", k, S->binavgs[k]);
 		fclose(file);
 		
-		printf("file print successful.");
-		printf("Bin %d average: %f\n", k, S->binavgs[k]);
+		printf("file print successful.\n");
+		printf("Bin %d average: %f\n\n", k, S->binavgs[k]);
 	}
 }
 
